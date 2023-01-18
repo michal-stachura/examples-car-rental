@@ -7,17 +7,17 @@ from car_rental.members.models import Member
 class Car(models.Model):
 
     class BRAND(Enum):
-        ford = ("for", "Ford")
-        fiat = ("fia", "Fiat")
-        toyota = ("toy", "Toyota")
+        ford = ("ford", "Ford")
+        fiat = ("fiat", "Fiat")
+        toyo = ("toyo", "Toyota")
         kia = ("kia", "Kia")
-        peugeot = ("peu", "Peugeot")
-        citroen = ("cit", "Citroen")
-        chevrolet = ("che", "Chevrolet")
+        peug = ("peug", "Peugeot")
+        citr = ("citr", "Citroen")
+        chev = ("chev", "Chevrolet")
         
 
     brand = models.CharField(
-        max_length=3,
+        max_length=4,
         blank=True,
         choices=[x.value for x in BRAND],
         default=BRAND.ford.value[0]
@@ -34,16 +34,19 @@ class Car(models.Model):
 
     class Meta:
         ordering = ["brand", "production_year"]
+        constraints = [
+            models.UniqueConstraint(fields=["member", "brand"], name="unique_car_brand_and_memeber")
+        ]
 
     def __str__(self) -> str:
-        return f"{self.model} ({self.brand})"
+        return f"{self.model} ({self.BRAND[self.brand].value[1]})"
     
 
 class Motorcycle(models.Model):
 
-    BRAND_SUZUKI = "suz"
-    BRAND_YAMAHA = "yam"
-    BRAND_HARLEY = "har"
+    BRAND_SUZUKI = "suzu"
+    BRAND_YAMAHA = "yama"
+    BRAND_HARLEY = "harl"
     
     BRANDS = [
         (BRAND_SUZUKI, "Suzuki"),
@@ -68,7 +71,7 @@ class Motorcycle(models.Model):
     )
 
     brand = models.CharField(
-        max_length=3,
+        max_length=4,
         blank=True,
         choices=BRANDS
     )
