@@ -41,6 +41,19 @@ class Car(models.Model):
                 check = models.Q(end_date__gte=models.F("start_date")),
                 name = "check_start_and_end_date",
                 violation_error_message = "Start date must be before end date."
+            ),
+            models.CheckConstraint(
+                check = (
+                    models.Q(
+                        color__iexact="black",
+                        air_condition=True,
+                    )
+                    | ~models.Q(
+                        color__iexact="black",
+                    )
+                ),
+                name = "check_air_condition",
+                violation_error_message = "Black cars must have air condition."
             )
         ]
 
