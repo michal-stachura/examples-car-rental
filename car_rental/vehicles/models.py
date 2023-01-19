@@ -31,7 +31,7 @@ class Car(models.Model):
             models.UniqueConstraint(
                 fields=["member", "brand"],
                 name="unique_car_brand_and_memeber",
-                condition=models.Q(production_year__lte=2016),
+                condition=models.Q(member__is_vip=False),
                 violation_error_message="You can add only one old car within car brand. Old <= 2016."
             ),
         ]
