@@ -9,7 +9,8 @@ class CarAdmin(admin.ModelAdmin):
         "member",
         "production_year",
         "color",
-        "seats"
+        "start_date",
+        "end_date",
     ]
 
     list_filter = [
@@ -30,7 +31,8 @@ class MotorcycleAdmin(admin.ModelAdmin):
         "member",
         "production_year",
         "color",
-        "seats"
+        "start_date",
+        "end_date",
     ]
 
     list_filter = [

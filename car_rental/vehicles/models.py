@@ -1,3 +1,4 @@
+from datetime import timedelta
 from enum import Enum
 from django.db import models
 from django.utils.timezone import now
@@ -23,17 +24,24 @@ class Car(models.Model):
     )
     color = models.CharField(max_length=20, default="White")
     seats = models.PositiveSmallIntegerField(default=1)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
     air_condition = models.BooleanField(default=True)
 
     class Meta:
         ordering = ["brand", "production_year"]
         constraints = [
             models.UniqueConstraint(
-                fields=["member", "brand"],
-                name="unique_car_brand_and_memeber",
-                condition=models.Q(production_year__lte=2016),
-                violation_error_message="You can add only one old car within car brand. Old <= 2016."
+                fields = ["member", "brand"],
+                name = "unique_car_brand_and_memeber",
+                condition = models.Q(production_year__lte=2016),
+                violation_error_message = "You can add only one old car within car brand. Old <= 2016.",
             ),
+            models.CheckConstraint(
+                check = models.Q(end_date__gte=models.F("start_date")),
+                name = "check_car_dates",
+                violation_error_message = "End date must be after start date"
+            )
         ]
 
     def __str__(self) -> str:
@@ -70,6 +78,8 @@ class Motorcycle(models.Model):
     production_year = models.PositiveSmallIntegerField(choices=PRODUCTION_YEARS, default=PRODUCTION_YEARS[0])
     color = models.CharField(max_length=20, default="White")
     seats = models.PositiveSmallIntegerField(default=1)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
 
     class Meta:
         ordering = ["brand", "production_year"]
