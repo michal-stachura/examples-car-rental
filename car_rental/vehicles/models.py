@@ -24,8 +24,8 @@ class Car(models.Model):
     )
     color = models.CharField(max_length=20, default="White")
     seats = models.PositiveSmallIntegerField(default=1)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
     air_condition = models.BooleanField(default=True)
 
     class Meta:
@@ -39,8 +39,8 @@ class Car(models.Model):
             ),
             models.CheckConstraint(
                 check = models.Q(end_date__gte=models.F("start_date")),
-                name = "check_car_dates",
-                violation_error_message = "End date must be after start date"
+                name = "check_start_and_end_date",
+                violation_error_message = "Start date must be before end date."
             )
         ]
 
@@ -78,8 +78,8 @@ class Motorcycle(models.Model):
     production_year = models.PositiveSmallIntegerField(choices=PRODUCTION_YEARS, default=PRODUCTION_YEARS[0])
     color = models.CharField(max_length=20, default="White")
     seats = models.PositiveSmallIntegerField(default=1)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
 
     class Meta:
         ordering = ["brand", "production_year"]
