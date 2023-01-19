@@ -1,4 +1,3 @@
-from datetime import timedelta
 from enum import Enum
 from django.db import models
 from django.utils.timezone import now
