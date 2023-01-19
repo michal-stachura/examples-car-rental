@@ -5,7 +5,27 @@ from django.utils.timezone import now
 from car_rental.members.models import Member
 
 
-class Car(models.Model):
+class Vehicle(models.Model):
+
+    model = models.CharField(max_length=120)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    production_year = models.PositiveSmallIntegerField(
+        choices=tuple((x,) * 2 for x in range(2010, now().year + 1)), default=2010
+    )
+    color = models.CharField(max_length=20, default="White")
+    seats = models.PositiveSmallIntegerField(default=1)
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+    class Meta:
+        ordering = ["brand", "production_year"]
+        abstract = True
+
+    def __str__(self) -> str:
+        return f"{self.model} ({self.BRAND[self.brand].value[1]})"
+
+
+class Car(Vehicle):
     class BRAND(Enum):
         ford = ("ford", "Ford")
         fiat = ("fiat", "Fiat")
@@ -21,15 +41,7 @@ class Car(models.Model):
         choices=[x.value for x in BRAND],
         default=BRAND.ford.value[0]
     )
-    model = models.CharField(max_length=120)
-    member = models.ForeignKey(Member, on_delete=models.CASCADE)
-    production_year = models.PositiveSmallIntegerField(
-        choices=tuple((x,) * 2 for x in range(2010, now().year + 1)), default=2010
-    )
-    color = models.CharField(max_length=20, default="White")
-    seats = models.PositiveSmallIntegerField(default=1)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    
     air_condition = models.BooleanField(default=True)
 
     class Meta:
@@ -63,7 +75,7 @@ class Car(models.Model):
         return f"{self.model} ({self.BRAND[self.brand].value[1]})"
 
 
-class Motorcycle(models.Model):
+class Motorcycle(Vehicle):
 
     class BRAND(Enum):
         suzu = ("suzu", "Suzuki")
@@ -76,18 +88,4 @@ class Motorcycle(models.Model):
         choices=[x.value for x in BRAND],
         default=BRAND.suzu.value[0]
     )
-    model = models.CharField(max_length=120)
-    member = models.ForeignKey(Member, on_delete=models.CASCADE)
-    production_year = models.PositiveSmallIntegerField(
-        choices=tuple((x,) * 2 for x in range(2010, now().year + 1)), default=2010
-    )
-    color = models.CharField(max_length=20, default="White")
-    seats = models.PositiveSmallIntegerField(default=1)
-    start_date = models.DateField()
-    end_date = models.DateField()
-
-    class Meta:
-        ordering = ["brand", "production_year"]
-
-    def __str__(self) -> str:
-        return f"{self.model} ({self.BRAND[self.brand].value[1]})"
+    
