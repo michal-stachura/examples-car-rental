@@ -46,11 +46,9 @@ class Car(models.Model):
                 check = (
                     models.Q(
                         color__iexact="black",
-                        air_condition=True,
+                        air_condition=True
                     )
-                    | ~models.Q(
-                        color__iexact="black",
-                    )
+                    | ~models.Q(color__iexact="black")
                 ),
                 name = "check_air_condition",
                 violation_error_message = "Black cars must have air condition."
